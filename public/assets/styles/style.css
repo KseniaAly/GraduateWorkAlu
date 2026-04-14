@@ -1,0 +1,291 @@
+@import url('/public/assets/fonts.css');
+
+.nav-mine{
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 10px 50px;
+    border-radius: 50px;
+}
+.nav-mine h3{
+    font-size: 24px;
+    margin-bottom: 0;
+    font-family: "Unbounded";
+    color: transparent;
+    background: linear-gradient(135deg, #E1E2FE 0%, #353896 100%);
+    background-clip: text;
+}
+.nav-mine .link-div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.nav-mine .link-div .link{
+    font-size: 14px;
+    color: black;
+    font-family: "Unbounded";
+    margin-bottom: 0;
+    text-decoration: none;
+    transition: 0.3s ease-in-out;
+}
+.nav-mine .link-div:hover .link{
+    color: #2E3192;
+}
+.nav-mine .link-div .line{
+    height: 1px;
+    width: 0;
+    background-color: #2E3192;
+    transition: 0.3s ease-in-out;
+}
+.nav-mine .link-div:hover .line{
+    width: 100%;
+}
+
+.mine{
+    padding: 50px;
+    border-radius: 50px;
+    background: white;
+}
+.mine .text{
+    font-size: 16px;
+    font-family: Unbounded;
+}
+
+.btn-mine{
+    font-family: Unbounded;
+    font-size: 16px;
+    color: #ffffff;
+    padding: 10px 50px;
+    position: relative;
+    background: black;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    z-index: 1;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+.btn-mine::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: #2f32bc;
+    transition: left 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    z-index: -1;
+    border-radius: inherit;
+}
+.btn-mine:hover::before{
+    left: 0;
+}
+.btn-mine:hover{
+    color: white;
+    box-shadow: 0 8px 25px rgba(47, 50, 188, 0.4);
+}
+
+.filter-container {
+    max-width: 700px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
+    border-radius: 60px;
+    padding: 0.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.filter-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.filter-select {
+    flex: 1;
+    min-width: 180px;
+    position: relative;
+}
+.filter-select select {
+    width: 100%;
+    padding: 0.85rem 2.5rem 0.85rem 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #1e293b;
+    background: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    appearance: none;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+.filter-select select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(47, 50, 188, 0.3);
+}
+.filter-select::after {
+    content: '\F282';
+    font-family: 'bootstrap-icons';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #2f32bc;
+    pointer-events: none;
+    font-size: 1rem;
+}
+.filter-btn {
+    padding: 0.85rem 1.8rem;
+    background: linear-gradient(135deg, #2f32bc, #4f46e5);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+.filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(47, 50, 188, 0.4);
+}
+.filter-btn:active {
+    transform: translateY(0);
+}
+
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+.modal-header-custom {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #E1E2FE 0%, #353896 100%);
+    border-radius: 32px 32px 0 0;
+    color: white;
+}
+.modal-header-custom h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: Unbounded;
+}
+.close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+.modal-body-custom {
+    padding: 2rem;
+}
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.9rem;
+}
+.form-group label i {
+    margin-right: 0.5rem;
+    color: #2f32bc;
+}
+.form-control-custom {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 1rem;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+.form-control-custom:focus {
+    outline: none;
+    border-color: #2f32bc;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+textarea.form-control-custom {
+    resize: vertical;
+    min-height: 100px;
+}
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+.btn-custom {
+    padding: 0.75rem 1.5rem;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    font-size: 0.9rem;
+}
+.btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+}
+.btn-secondary:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+}
+.btn-primary-custom {
+    background: linear-gradient(135deg, #E1E2FE 0%, #353896 50%, #E1E2FE 100%);
+    color: white;
+    background-size: 200% 100%;
+    background-position: left center;
+    transition: background-position 0.5s ease;
+}
+.btn-primary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(47, 50, 188, 0.3);
+    background-position: right center;
+}
+.btn-destroy-custom {
+    background: linear-gradient(135deg, #ffbdc4 0%, #d30018 50%, #ffbdc4 100%);
+    color: white;
+    background-size: 200% 100%;
+    background-position: left center;
+    transition: background-position 0.5s ease;
+}
+.btn-destroy-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(211, 0, 24, 0.3);
+    background-position: right center;
+    color: white;
+}
