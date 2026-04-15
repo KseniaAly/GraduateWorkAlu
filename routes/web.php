@@ -52,3 +52,5 @@ Route::get('/catalog/test/{test}', [\App\Http\Controllers\PageController::class,
 Route::get('/admin/analytics', [\App\Http\Controllers\PageController::class, 'analytics'])->name('analytics');
 
 Route::get('/profile', [\App\Http\Controllers\PageController::class, 'profile'])->name('profile');
+Route::put('/profile/redact/{user}', [UserController::class, 'edit'])->name('profileRedact');
+Route::put('/profile/redact/avatar/{user}', [UserController::class, 'editAvatar'])->name('profileRedactAvatar');

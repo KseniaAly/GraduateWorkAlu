@@ -5,10 +5,17 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-start" style="margin-top: 100px">
         <div>
-            <div class="mine d-flex" style="padding: 30px; position: relative">
+            <div class="mine d-flex" style="padding: 30px; position: relative; width: 630px">
                 <div class="image">
-                    <img src="{{asset($user->avatar)}}">
-                    <button class="profile-btn"><i class="bi bi-camera"></i></button>
+                    <img src="{{asset('/storage/'.$user->avatar)}}">
+                    <form method="post" action="{{route('profileRedactAvatar', ['user'=>$user])}}" enctype="multipart/form-data" id="uploadForm">
+                        @csrf
+                        @method('put')
+                        <label for="avatarInput" class="profile-btn">
+                            <i class="bi bi-camera"></i>
+                        </label>
+                        <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;">
+                    </form>
                 </div>
                 <div class="info">
                     <h1>{{$user->fio}}</h1>
@@ -34,7 +41,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="edit"><i class="bi bi-pencil-square"></i></button>
+                <button class="edit" type="button" data-bs-target="#redact_profile" data-bs-toggle="modal"><i class="bi bi-pencil-square"></i></button>
             </div>
             <div class="mine" style="margin-top: 20px; padding: 30px">
                 <div class="d-flex align-items-center">
@@ -67,7 +74,9 @@
                     </div>
                 </div>
             </div>
-            <div class="mine" style="margin-top: 20px; padding: 30px">
+        </div>
+        <div>
+            <div class="mine" style="padding: 30px; width: 690px">
                 <h2>Недавняя активность</h2>
                 <div>
                     <div class="card-active">
@@ -114,6 +123,83 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="redact_profile" tabindex="-2" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border-radius: 50px">
+                <div class="modal-header-custom">
+                    <h2 class="modal-title fs-5" id="exampleModalLabel">
+                        <i class="bi bi-person-vcard-fill"></i>
+                        Редактирование данных
+                    </h2>
+                    <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="modal-body-custom">
+                    <form method="post" action="{{route('profileRedact', ['user'=>$user])}}">
+                        @csrf
+                        @method('put')
+                        <div class="form-group">
+                            <label>
+                                <i class="bi bi-person"></i>
+                                ФИО
+                            </label>
+                            <input type="text" name="fio" class="form-control-custom" placeholder="Например: Иванов иван" required
+                            value="{{$user->fio}}">
+                            @error('fio')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>
+                                    <i class="bi bi-envelope-at"></i>
+                                    Почта
+                                </label>
+                                <input type="email" name="email" class="form-control-custom" placeholder="Например: ivanov@gmail.com"
+                                value="{{$user->email}}">
+                                @error('email')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label>
+                                    <i class="bi bi-telephone"></i>
+                                    Номер телефона
+                                </label>
+                                <input type="tel" name="phone" class="form-control-custom" placeholder="Например: +71234567890"
+                                value="{{$user->phone}}">
+                                @error('phone')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-custom btn-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle"></i> Отмена
+                            </button>
+                            <button type="submit" class="btn-custom btn-primary-custom">
+                                <i class="bi bi-check-circle"></i> Опубликовать
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('avatarInput')
+            .addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    document
+                        .getElementById('uploadForm')
+                        .submit();
+                }
+            });
+    </script>
 
     <style>
         .mine h2{
