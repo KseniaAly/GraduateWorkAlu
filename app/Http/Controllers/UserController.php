@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerificationCodeMail;
 use Carbon\Carbon;
@@ -32,7 +33,11 @@ class UserController extends Controller
 //        $user->code_expires_at = Carbon::now()->addMinutes(10);
         $user->save();
         return redirect()->route('authorization');
-//        Mail::to($user->email)->send(new VerificationCodeMail($code));
+//        try {
+//            Mail::to($user->email)->send(new VerificationCodeMail($code));
+//        } catch (\Exception $exception) {
+//            Log::error('Mail error: '.$exception->getMessage());
+//        }
 //        return redirect()->route('verify.page')->with('email', $user->email);
     }
 //    public function verifyCode(Request $request)
