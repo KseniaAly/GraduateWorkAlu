@@ -6,6 +6,7 @@ use App\Models\Test;
 use App\Models\TestQuestion;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
@@ -42,5 +43,10 @@ class PageController extends Controller
     public function analytics()
     {
         return view('admin.analytics');
+    }
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('profile', ['user' => $user]);
     }
 }

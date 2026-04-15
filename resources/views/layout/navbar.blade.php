@@ -15,10 +15,14 @@
             </div>
         @endguest
         @auth()
-            <div class="link-div" style="margin-right: 10px">
+            <div class="link-div" style="margin-right: 20px">
                 <a class="link" href="{{route('catalog')}}">Каталог тестов</a>
                 <div class="line"></div>
             </div>
+                <div class="link-div" style="margin-right: 10px">
+                    <a class="link" href="{{route('profile')}}">Профиль</a>
+                    <div class="line"></div>
+                </div>
             @if(\Illuminate\Support\Facades\Auth::user()->role=='admin')
                 <li class="nav-item dropdown" style="list-style-type: none">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
