@@ -50,3 +50,5 @@ Route::get('/catalog', [\App\Http\Controllers\PageController::class, 'catalog'])
 Route::get('/catalog/test/{test}', [\App\Http\Controllers\PageController::class, 'test'])->name('testCatalog');
 
 Route::get('/admin/analytics', [\App\Http\Controllers\PageController::class, 'analytics'])->name('analytics');
+
+Route::get('/profile', [\App\Http\Controllers\PageController::class, 'profile'])->name('profile');
