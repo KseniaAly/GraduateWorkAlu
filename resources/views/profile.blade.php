@@ -36,10 +36,91 @@
                 </div>
                 <button class="edit"><i class="bi bi-pencil-square"></i></button>
             </div>
+            <div class="mine" style="margin-top: 20px; padding: 30px">
+                <div class="d-flex align-items-center">
+                    <h2>Статистика</h2>
+                    <div class="select">
+
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="card-static">
+                        <div class="icon"><i class="bi bi-activity"></i></div>
+                        <div>
+                            <p>5</p>
+                            <p class="title">Пройдено тестов</p>
+                        </div>
+                    </div>
+                    <div class="card-static" style="margin-left: 20px">
+                        <div class="icon" style="background: #FEE9EA; color: #F42836"><i class="bi bi-graph-up"></i></div>
+                        <div>
+                            <p>90%</p>
+                            <p class="title">Средний результат</p>
+                        </div>
+                    </div>
+                    <div class="card-static" style="margin-left: 20px">
+                        <div class="icon"><i class="bi bi-clock"></i></div>
+                        <div>
+                            <p>3ч</p>
+                            <p class="title">Общее время</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mine" style="margin-top: 20px; padding: 30px">
+                <h2>Недавняя активность</h2>
+                <div>
+                    <div class="card-active">
+                        <div class="d-flex align-items-center w-100">
+                            <div class="icon"><i class="bi bi-file-earmark-text"></i></div>
+                            <div>
+                                <div class="title">Тест на аналитические способности</div>
+                                <div class="description">Тест покажет ваши аналитические способности.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="result">92%</div>
+                            <i class="bi bi-caret-right" style="color: gray"></i>
+                        </div>
+                    </div>
+                    <div class="card-active">
+                        <div class="d-flex align-items-center w-100">
+                            <div class="icon"><i class="bi bi-file-earmark-text"></i></div>
+                            <div>
+                                <div class="title">Проверка знаний laravel</div>
+                                <div class="description">Содержит тестовые вопросы и задания на написание кода.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="result not-enough">75%</div>
+                            <i class="bi bi-caret-right" style="color: gray"></i>
+                        </div>
+                    </div>
+                    <div class="card-active">
+                        <div class="d-flex align-items-center w-100">
+                            <div class="icon"><i class="bi bi-file-earmark-text"></i></div>
+                            <div>
+                                <div class="title">Проверка знаний для frontend-разработчика</div>
+                                <div class="description">Тест содержит 10 вопросов для проверки знаний frontend-разработчика...</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="result">76%</div>
+                            <i class="bi bi-caret-right" style="color: gray"></i>
+                        </div>
+                    </div>
+                </div>
+                <h5>Посмотреть всю активность</h5>
+            </div>
         </div>
     </div>
 
     <style>
+        .mine h2{
+            font-size: 18px;
+            font-family: Unbounded;
+        }
+
         .image{
             position: relative;
             margin-right: 20px;
@@ -53,7 +134,7 @@
             position: absolute;
             bottom: 10px;
             right: 0;
-            background: #f6f6f6;
+            background: #F8F9FC;
             padding: 6px 10px;
             border-radius: 100%;
             border: none;
@@ -88,7 +169,7 @@
             background: #f5d9d9;
         }
         .profile-card{
-            background: #f6f6f6;
+            background: #F8F9FC;
             padding: 5px 10px;
             border-radius: 15px;
         }
@@ -106,7 +187,7 @@
             top: 20px;
             right: 30px;
             border: none;
-            background: #f6f6f6;
+            background: #F8F9FC;
             padding: 3px 7px;
             border-radius: 10px;
             color: #2f32bc;
@@ -116,6 +197,64 @@
         .edit:hover{
             background: #2f32bc;
             color: white;
+        }
+        .card-static{
+            padding: 10px;
+            border-radius: 15px;
+            background-color: #F5F6FE;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .icon{
+            padding: 5px 10px;
+            border-radius: 10px;
+            background: #E9EBFE;
+            color: #2f32bc;
+            margin-right: 10px;
+        }
+        .card-static p{
+            margin-bottom: 0;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .card-static .title{
+            color: gray;
+            font-weight: 400;
+            font-size: 12px;
+        }
+        .card-active{
+            padding: 5px 10px;
+            display: flex;
+            border-bottom: 1px solid #e3e3e3;
+            align-items: center;
+        }
+        .card-active .title{
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .card-active .description{
+            font-size: 12px;
+            color: gray;
+        }
+        .card-active .result{
+            padding: 2px 7px;
+            color: #17a45b;
+            background: #d9f5e7;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .card-active .result.not-enough{
+            color: #a41717;
+            background: #f5d9d9;
+        }
+        .mine h5{
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 0;
+            color: #2f32bc;
+            text-decoration: underline;
         }
     </style>
 @endsection
