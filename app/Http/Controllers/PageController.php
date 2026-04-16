@@ -21,17 +21,26 @@ class PageController extends Controller
     public function authorization(){
         return view('authorization');
     }
-    public function catalog()
+    public function catalog(Request $request)
     {
         $vacancies = Vacancy::all();
         $tests = Test::query()->where('status', 'active')->orderByDesc('created_at')->get();
         $counts = [];
         $count_tests = [];
         foreach ($tests as $test) {
-            $counts[$test->id] = count(TestQuestion::where('test_id', $test->id)->get());
-            $count_tests[$test->vacancy->id] = count(Test::where('status', 'active')
-                ->where('vacancy_id', $test->vacancy->id)->get());
+            $counts[$test->id] = TestQuestion::where('test_id', $test->id)->count();
+            $count_tests[$test->vacancy->id] = Test::where('status', 'active')
+                ->where('vacancy_id', $test->vacancy->id)->count();
         }
+        $query = Test::query()->where('status', 'active');
+        if ($request->filled('vacancies')) {
+            $ids = explode(',', $request->vacancies);
+            $query->whereIn('vacancy_id', $ids);
+        }
+        if ($request->has('search') && $request->search != '') {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+        $tests = $query->orderByDesc('created_at')->get();
         return view('users.catalog', ['vacancies' => $vacancies, 'tests' => $tests,
             'counts' => $counts, 'count_tests' => $count_tests]);
     }

@@ -9,17 +9,21 @@
                 <h1>Каталог тестов</h1>
                 <p class="p">Пройдите онлайн-собеседование на понравившуюся вакансию</p>
             </div>
-            <div>
+            <form action="{{route('catalog')}}" method="get">
+                @if(request('vacancies'))
+                    <input type="hidden" name="vacancies" value="{{request('vacancies')}}">
+                @endif
                 <div class="search-block filter-container">
                     <div class="search-input">
                         <i class="bi bi-search" style="color: #687685"></i>
-                        <input type="text" placeholder="Поиск тестов по названию...">
+                        <input type="text" name="search" id="searchInput" value="{{request('search')}}"
+                               placeholder="Поиск тестов по названию...">
                     </div>
                     <button class="filter-btn">
                         Найти
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
@@ -28,7 +32,7 @@
             <div style="border-right: 1px solid rgba(47, 50, 188, 0.2); padding: 40px 20px 40px 50px; max-width: 350px">
                 <h3>Вакансии</h3>
                 <div>
-                    <div class="vacancy-card active">
+                    <div class="vacancy-card" data-id="all">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-briefcase"></i>
                             <p>Все вакансии</p>
@@ -36,7 +40,7 @@
                         <div class="badge-vacancy">{{count($tests)}}</div>
                     </div>
                     @foreach($vacancies as $vacancy)
-                        <div class="vacancy-card">
+                        <div class="vacancy-card" data-id="{{$vacancy->id}}">
                             <div class="d-flex align-items-center">
                                 <i class="bi bi-briefcase"></i>
                                 <p>{{$vacancy->title}}</p>
@@ -105,6 +109,60 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cards = document.querySelectorAll(".vacancy-card");
+            const allCard = document.querySelector('[data-id="all"]');
+            const vacancyCards = document.querySelectorAll('.vacancy-card:not([data-id="all"])');
+            const totalVacancies = vacancyCards.length;
+            let params = new URLSearchParams(window.location.search);
+            let selectedVacancies = params.get("vacancies") ? params.get("vacancies").split(",") : [];
+            if (selectedVacancies.length === 0) {
+                allCard.classList.add("active");
+            } else {
+                vacancyCards.forEach(card => {
+                    if (selectedVacancies.includes(card.dataset.id)) {
+                        card.classList.add("active");
+                    }
+                });
+                allCard.classList.remove("active");
+            }
+            cards.forEach(card => {
+                card.addEventListener("click", function () {
+                    let id = this.dataset.id;
+                    if (id === "all") {
+                        selectedVacancies = [];
+                        updateUrl();
+                        return;
+                    }
+                    this.classList.toggle("active");
+                    if (selectedVacancies.includes(id)) {
+                        selectedVacancies = selectedVacancies.filter(v => v !== id);
+                    } else {
+                        selectedVacancies.push(id);
+                    }
+                    if (selectedVacancies.length === totalVacancies) {
+                        selectedVacancies = [];
+                    }
+                    updateUrl();
+                });
+            });
+            function updateUrl() {
+                let url = new URL(window.location);
+                let searchValue = document.querySelector('input[name="search"]').value;
+                if (selectedVacancies.length > 0) {
+                    url.searchParams.set("vacancies", selectedVacancies.join(","));
+                } else {
+                    url.searchParams.delete("vacancies");
+                }
+                if (searchValue) {
+                    url.searchParams.set("search", searchValue);
+                }
+                window.location.href = url;
+            }
+        });
+    </script>
 
     <style>
         .mine h1{
