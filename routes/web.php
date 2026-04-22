@@ -9,11 +9,6 @@ Route::get('/authorization', [\App\Http\Controllers\PageController::class, 'auth
 
 Route::post('/registration/user', [Usercontroller::class, 'registration'])->name('registrationUser');
 
-//Route::get('/verify', function () {
-//    return view('verify');
-//})->name('verify.page');
-//Route::post('/verify-code', [UserController::class, 'verifyCode'])->name('verify.code');
-
 Route::post('/login', [\App\Http\Controllers\UserController::class, 'login'])->name('login');
 Route::get('/logout', [\App\Http\Controllers\UserController::class, 'logout'])->name('logout');
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Test;
 use App\Models\TestQuestion;
+use App\Models\User;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,5 +58,10 @@ class PageController extends Controller
     {
         $user = Auth::user();
         return view('profile', ['user' => $user]);
+    }
+
+    public function verify($email)
+    {
+        return view('verify', ['email' => $email]);
     }
 }
