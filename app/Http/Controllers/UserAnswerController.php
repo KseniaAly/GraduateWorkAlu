@@ -31,11 +31,7 @@ class UserAnswerController extends Controller
                 ->store('test_files', 'public');
             $answers[$questionId] = $path;
         } else {
-            if ($type === 'checkbox') {
-                $answers[$questionId] = $request->value;
-            } else {
-                $answers[$questionId] = $request->value;
-            }
+            $answers[$questionId] = $request->value;
         }
         session()->put('test_answers', $answers);
 

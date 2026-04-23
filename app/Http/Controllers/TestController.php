@@ -123,6 +123,7 @@ class TestController extends Controller
      */
     public function destroy(Test $test)
     {
+//        $test->questions()->delete();
         $test_questions = TestQuestion::query()->where('test_id', $test->id)->get();
         foreach ($test_questions as $test_question) {
             $test_question->delete();
