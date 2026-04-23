@@ -42,4 +42,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Test::class);
     }
+    public function answers()
+    {
+        return $this->hasMany(UserAnswer::class , 'user_id');
+    }
 }

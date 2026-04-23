@@ -29,4 +29,8 @@ class Test extends Model
             ->withPivot('position')
             ->orderBy('position');
     }
+    public function answers()
+    {
+        return $this->hasMany(UserAnswer::class , 'test_id');
+    }
 }

@@ -61,7 +61,7 @@ class UserAnswerController extends Controller
                     'user_id' => auth()->id(),
                     'question_id' => $questionId,
                     'answer' => $answer,
-                    "test_id" => $test->id,
+                    'test_id' => $test->id,
                     'points' => 0,
                 ]);
             }
