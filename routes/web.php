@@ -45,6 +45,8 @@ Route::get('/tests/test/preview/{test}', [\App\Http\Controllers\TestController::
 
 Route::get('/catalog', [\App\Http\Controllers\PageController::class, 'catalog'])->name('catalog');
 Route::get('/catalog/test/{test}', [\App\Http\Controllers\PageController::class, 'test'])->name('testCatalog');
+Route::post('/catalog/test/save-answer', [\App\Http\Controllers\UserAnswerController::class, 'create'])->name('test.saveAnswer');
+Route::post('/catalog/test/{test}/save', [\App\Http\Controllers\UserAnswerController::class, 'store'])->name('test.save');
 
 Route::get('/admin/analytics', [\App\Http\Controllers\PageController::class, 'analytics'])->name('analytics');
 

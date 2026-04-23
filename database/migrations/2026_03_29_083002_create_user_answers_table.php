@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(\App\Models\Question::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignIdFor(\App\Models\Test::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('answer')->nullable();
             $table->json('answers')->nullable();
             $table->boolean('is_correct')->nullable();
             $table->integer('points');
-            $table->time('completed_time');
             $table->timestamps();
         });
     }

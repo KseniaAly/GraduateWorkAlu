@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\QuestionOption;
 use App\Models\Test;
 use App\Models\TestQuestion;
 use App\Models\User;
@@ -48,7 +49,10 @@ class PageController extends Controller
 
     public function test(Test $test)
     {
-        return view('users.test', ['test' => $test]);
+        $test_questions = TestQuestion::query()->where('test_id', $test->id)->orderBy('position')->paginate(2);
+        $question_options = QuestionOption::all();
+        return view('users.test', ['test' => $test],
+            ['test_questions' => $test_questions, 'question_options' => $question_options]);
     }
     public function analytics()
     {
