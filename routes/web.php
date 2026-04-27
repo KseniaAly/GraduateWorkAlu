@@ -8,12 +8,12 @@ Route::get('/', [\App\Http\Controllers\PageController::class, 'welcome'])->name(
 Route::get('/registration', [\App\Http\Controllers\PageController::class, 'registration'])->name('registration');
 Route::get('/authorization', [\App\Http\Controllers\PageController::class, 'authorization'])->name('authorization');
 
-Route::post('/registration/user', [Usercontroller::class, 'registration'])->name('registrationUser');
+Route::post('/registration/user', [UserController::class, 'registration'])->name('registrationUser');
 
 Route::post('/login', [\App\Http\Controllers\UserController::class, 'login'])->name('login');
-Route::get('/logout', [\App\Http\Controllers\UserController::class, 'logout'])->name('logout');
+Route::post('/logout', [\App\Http\Controllers\UserController::class, 'logout'])->name('logout');
 
-Route::group(['middleware' => ['auth'=>'admin']], function () {
+Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::get('/vacancies', [\App\Http\Controllers\VacancyController::class, 'index'])->name('vacancies');
     Route::post('/vacancies/store', [\App\Http\Controllers\VacancyController::class, 'store'])->name('vacanciesStore');
     Route::put('/vacancies/update/{vacancy}', [\App\Http\Controllers\VacancyController::class, 'update'])->name('vacanciesUpdate');

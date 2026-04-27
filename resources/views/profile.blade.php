@@ -79,45 +79,47 @@
             <div class="mine" style="padding: 30px; width: 690px">
                 <h2>Недавняя активность</h2>
                 <div>
-                    <div class="card-active">
-                        <div class="d-flex align-items-center w-100">
-                            <div class="icon"><i class="bi bi-file-earmark-text"></i></div>
-                            <div>
-                                <div class="title">Тест на аналитические способности</div>
-                                <div class="description">Тест покажет ваши аналитические способности.</div>
+                    @foreach($tests as $test)
+                        <div class="card-active">
+                            <div class="d-flex align-items-center w-100">
+                                <div class="icon"><i class="bi bi-file-earmark-text"></i></div>
+                                <div>
+                                    <div class="title">{{$test->title}}</div>
+                                    <div class="description">{{$test->description}}</div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="result">92%</div>
+                                <i class="bi bi-caret-right" style="color: gray"></i>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center">
-                            <div class="result">92%</div>
-                            <i class="bi bi-caret-right" style="color: gray"></i>
-                        </div>
-                    </div>
-                    <div class="card-active">
-                        <div class="d-flex align-items-center w-100">
-                            <div class="icon"><i class="bi bi-file-earmark-text"></i></div>
-                            <div>
-                                <div class="title">Проверка знаний laravel</div>
-                                <div class="description">Содержит тестовые вопросы и задания на написание кода.</div>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <div class="result not-enough">75%</div>
-                            <i class="bi bi-caret-right" style="color: gray"></i>
-                        </div>
-                    </div>
-                    <div class="card-active">
-                        <div class="d-flex align-items-center w-100">
-                            <div class="icon"><i class="bi bi-file-earmark-text"></i></div>
-                            <div>
-                                <div class="title">Проверка знаний для frontend-разработчика</div>
-                                <div class="description">Тест содержит 10 вопросов для проверки знаний frontend-разработчика...</div>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <div class="result">76%</div>
-                            <i class="bi bi-caret-right" style="color: gray"></i>
-                        </div>
-                    </div>
+                    @endforeach
+{{--                    <div class="card-active">--}}
+{{--                        <div class="d-flex align-items-center w-100">--}}
+{{--                            <div class="icon"><i class="bi bi-file-earmark-text"></i></div>--}}
+{{--                            <div>--}}
+{{--                                <div class="title">Проверка знаний laravel</div>--}}
+{{--                                <div class="description">Содержит тестовые вопросы и задания на написание кода.</div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="d-flex align-items-center">--}}
+{{--                            <div class="result not-enough">75%</div>--}}
+{{--                            <i class="bi bi-caret-right" style="color: gray"></i>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="card-active">--}}
+{{--                        <div class="d-flex align-items-center w-100">--}}
+{{--                            <div class="icon"><i class="bi bi-file-earmark-text"></i></div>--}}
+{{--                            <div>--}}
+{{--                                <div class="title">Проверка знаний для frontend-разработчика</div>--}}
+{{--                                <div class="description">Тест содержит 10 вопросов для проверки знаний frontend-разработчика...</div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="d-flex align-items-center">--}}
+{{--                            <div class="result">76%</div>--}}
+{{--                            <i class="bi bi-caret-right" style="color: gray"></i>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
                 <h5>Посмотреть всю активность</h5>
             </div>

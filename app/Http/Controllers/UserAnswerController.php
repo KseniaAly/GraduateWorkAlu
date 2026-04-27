@@ -24,9 +24,7 @@ class UserAnswerController extends Controller
     public function create(Request $request)
     {
         $answers = session()->get('test_answers', []);
-//        UserAnswer::where('user_id', auth()->id())->where('test_id', $test->id)->delete();
         $questionId = $request->question_id;
-        $type = $request->type;
         if ($request->hasFile('file')) {
             $path = $request->file('file')
                 ->store('test_files', 'public');
@@ -47,7 +45,6 @@ class UserAnswerController extends Controller
         $answers = session('test_answers', []);
         UserAnswer::where('user_id', auth()->id())->where('test_id', $test->id)->delete();
         foreach ($answers as $questionId => $answer) {
-            $question = Question::with('options')->find($questionId);
             if (is_array($answer)) {
                 $correctOptions = QuestionOption::where('question_id', $questionId)->where('is_correct', true)->pluck('id')->toArray();
                 sort($correctOptions);

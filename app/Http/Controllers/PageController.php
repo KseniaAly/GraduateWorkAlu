@@ -6,6 +6,7 @@ use App\Models\QuestionOption;
 use App\Models\Test;
 use App\Models\TestQuestion;
 use App\Models\User;
+use App\Models\UserAnswer;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -75,7 +76,14 @@ class PageController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        return view('profile', ['user' => $user]);
+        $answers = UserAnswer::where('user_id', auth()->id())->orderByDesc('created_at')->pluck('test_id')->toArray();
+        $answers = array_unique($answers);
+        $tests = Test::query();
+        foreach ($answers as $answer) {
+            $tests = $tests->where('id', $answer);
+        }
+        $tests = $tests->get();
+        return view('profile', ['user' => $user, 'tests' => $tests]);
     }
 
     public function verify($email)
