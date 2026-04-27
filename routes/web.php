@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ResultController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/catalog/test/{test}', [\App\Http\Controllers\PageController::class, 'test'])->name('testCatalog');
     Route::post('/catalog/test/save-answer', [\App\Http\Controllers\UserAnswerController::class, 'create'])->name('test.saveAnswer');
     Route::post('/catalog/test/{test}/save', [\App\Http\Controllers\UserAnswerController::class, 'store'])->name('test.save');
+
+    Route::get('/test/result', [ResultController::class, 'index'])->name('test.result');
 
     Route::get('/profile', [\App\Http\Controllers\PageController::class, 'profile'])->name('profile');
     Route::put('/profile/redact/{user}', [UserController::class, 'edit'])->name('profileRedact');

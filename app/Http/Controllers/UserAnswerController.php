@@ -54,7 +54,6 @@ class UserAnswerController extends Controller
                 sort($answer);
                 $is_correct = $correctOptions == $answer ? true : false;
                 $correctCount = count(array_intersect($correctOptions, $answer));
-//                dd($correctCount);
                 UserAnswer::create([
                     'user_id' => auth()->id(),
                     'question_id' => $questionId,
