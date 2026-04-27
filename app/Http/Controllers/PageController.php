@@ -49,10 +49,24 @@ class PageController extends Controller
 
     public function test(Test $test)
     {
+        if(!session()->has('test_started_at_'.$test->id)){
+            session()->put('test_started_at_'.$test->id, now()->timestamp);
+            session()->put('test_time_limit_'.$test->id, $test->limit_time*60);
+        }
+        $started = session('test_started_at_'.$test->id);
+        $limit = session('test_time_limit_'.$test->id);
+        $remainingTime = $limit-(time()-$started);
+        $remainingTime = max(0, (int)$remainingTime);
+        if ($remainingTime <= 0) {
+            session()->forget('test_answers');
+            session()->forget('test_started_at');
+            return redirect()->route('catalog')->with('error', 'Время теста истекло');
+        }
         $test_questions = TestQuestion::query()->where('test_id', $test->id)->orderBy('position')->paginate(2);
         $question_options = QuestionOption::all();
         return view('users.test', ['test' => $test],
-            ['test_questions' => $test_questions, 'question_options' => $question_options]);
+            ['test_questions' => $test_questions, 'question_options' => $question_options,
+                'remainingTime' => $remainingTime]);
     }
     public function analytics()
     {

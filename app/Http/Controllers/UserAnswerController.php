@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Question;
+use App\Models\QuestionOption;
 use App\Models\Test;
 use App\Models\UserAnswer;
 use Illuminate\Http\Request;
@@ -44,29 +45,40 @@ class UserAnswerController extends Controller
     public function store(Request $request, Test $test)
     {
         $answers = session('test_answers', []);
-//        UserAnswer::where('user_id', auth()->id())->where('test_id', $test->id)->delete();
+        UserAnswer::where('user_id', auth()->id())->where('test_id', $test->id)->delete();
         foreach ($answers as $questionId => $answer) {
             $question = Question::with('options')->find($questionId);
-            $correctOptions = $question->options->where('is_correct', true)->pluck('id')->toArray();
             if (is_array($answer)) {
+                $correctOptions = QuestionOption::where('question_id', $questionId)->where('is_correct', true)->pluck('id')->toArray();
+                sort($correctOptions);
+                sort($answer);
+                $is_correct = $correctOptions == $answer ? true : false;
+                $correctCount = count(array_intersect($correctOptions, $answer));
+//                dd($correctCount);
                 UserAnswer::create([
                     'user_id' => auth()->id(),
                     'question_id' => $questionId,
                     'test_id' => $test->id,
                     'answers' => json_encode($answer),
-                    'points' => 0,
+                    'is_correct' => $is_correct,
+                    'points' => $correctCount,
                 ]);
             } else {
+                $correctOption = QuestionOption::where('question_id', $questionId)->where('is_correct', true)->pluck('id')->first();
+                $is_correct = $correctOption == $answer ? true : false;
                 UserAnswer::create([
                     'user_id' => auth()->id(),
                     'question_id' => $questionId,
                     'answer' => $answer,
                     'test_id' => $test->id,
-                    'points' => 0,
+                    'is_correct' => $is_correct,
+                    'points' => $is_correct ? 1 : 0,
                 ]);
             }
         }
         session()->forget('test_answers');
+        session()->forget('test_started_at_'.$test->id);
+        session()->forget('test_time_limit_'.$test->id);
         return redirect()->route('profile');
     }
 

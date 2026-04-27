@@ -5,22 +5,29 @@
 @section('content')
     <div class="mine d-flex justify-content-between align-items-center" style="margin-top: 100px; margin-bottom: 20px">
         <h1>"{{$test->title}}"</h1>
-        <div class="d-flex align-items-center" style="width: 30%">
-            <p style="margin-right: 10px">
-                Страница {{$test_questions->currentPage()}} из {{$test_questions->lastPage()}}
-            </p>
-            @php
-                $sessionAnswers = session('test_answers', []);
-                $total = $test_questions->total();
-                $answered = count($sessionAnswers);
-                $percent = $total ? round(($answered / $total) * 100) : 0;
-            @endphp
-            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
-                 style="border-radius: 30px; height: 10px; width: 200px">
-                <div class="progress-bar" style="width:{{$percent}}%;; border-radius: 30px;
+        <div class="d-flex align-items-center" style="width: 43%">
+            <div class="d-flex align-items-center" style="width: 95%">
+                <p style="margin-right: 10px">
+                    Страница {{$test_questions->currentPage()}} из {{$test_questions->lastPage()}}
+                </p>
+                @php
+                    $sessionAnswers = session('test_answers', []);
+                    $total = $test_questions->total();
+                    $answered = count($sessionAnswers);
+                    $percent = $total ? round(($answered / $total) * 100) : 0;
+                @endphp
+                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
+                     style="border-radius: 30px; height: 10px; width: 200px">
+                    <div class="progress-bar" style="width:{{$percent}}%;; border-radius: 30px;
                 background: linear-gradient(135deg, #E1E2FE 0%, #353896 100%);"></div>
+                </div>
+                <small style="margin-left: 5px; color: #777;">{{$percent}}%</small>
             </div>
-            <small style="margin-left: 5px; color: #777;">{{$percent}}%</small>
+            <div style="margin-left: 5px; text-align: right">
+                <i class="bi bi-stopwatch"></i>
+                Осталось времени:
+                <span id="timer" style="color: #2f32bc; font-weight: 500">{{sprintf('%02d:%02d', floor($remainingTime / 60), $remainingTime % 60)}}</span>
+            </div>
         </div>
     </div>
     <form action="{{route('test.save', ['test'=>$test])}}" method="post" enctype="multipart/form-data">
@@ -185,6 +192,27 @@
                 });
             });
         });
+    </script>
+    <script>
+        let timeLeft = {{$remainingTime}};
+        let timerElement = document.getElementById('timer');
+        let countdown = setInterval(() => {
+            let hours = Math.floor(timeLeft / 3600);
+            let minutes = Math.floor((timeLeft % 3600) / 60);
+            let seconds = timeLeft % 60;
+            seconds = seconds<10? '0'+seconds : seconds;
+            timerElement.textContent = hours + ':' + minutes + ':' + seconds;
+            timeLeft--;
+            if (timeLeft < 0) {
+                clearInterval(countdown);
+                alert('Время теста истекло');
+                document.querySelector('form').submit();
+            }
+        }, 1000);
+
+        if (timeLeft <= 60) {
+            timerElement.style.color = 'red';
+        }
     </script>
 
 <style>
