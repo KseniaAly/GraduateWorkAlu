@@ -11,7 +11,7 @@ Route::get('/authorization', [\App\Http\Controllers\PageController::class, 'auth
 Route::post('/registration/user', [UserController::class, 'registration'])->name('registrationUser');
 
 Route::post('/login', [\App\Http\Controllers\UserController::class, 'login'])->name('login');
-Route::post('/logout', [\App\Http\Controllers\UserController::class, 'logout'])->name('logout');
+Route::get('/logout', [\App\Http\Controllers\UserController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::get('/vacancies', [\App\Http\Controllers\VacancyController::class, 'index'])->name('vacancies');
