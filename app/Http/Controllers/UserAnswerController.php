@@ -89,7 +89,7 @@ class UserAnswerController extends Controller
                     'is_correct' => null,
                     'points' => 0,
                 ]);
-                AnalyzeAnswerJob::dispatch($userAnswer, $type, $data['extension'] ?? null);
+                AnalyzeAnswerJob::dispatch($userAnswer->id, $type, $data['extension'] ?? null);
             }
         }
         session()->forget('test_answers');

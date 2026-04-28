@@ -32,15 +32,19 @@ class AIService{
                 ],
                 'temperature' => 0.1
             ]);
-            if ($response->failed()){
-                Log::error('AIService: запрос не удался', [
-//                    'status' => $response->status(),
-                    'body'   => $response->body(),
+            if ($response->failed()) {
+                Log::error('OpenRouter FAILED', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
                 ]);
                 return null;
             }
-            return $response->json();
-        } catch (\Exception $error){
+            $raw = $response->body();
+            Log::info('OpenRouter RAW RESPONSE', [
+                'raw' => $raw
+            ]);
+            return json_decode($raw, true);
+        } catch (\Throwable $error){
             Log::error('AIService: исключение', ['message' => $error->getMessage()]);
             return null;
         }
@@ -48,10 +52,18 @@ class AIService{
     private function parseContent(?array $response): ?array
     {
         $content = $response['choices'][0]['message']['content'] ?? null;
-        if (!$content) return null;
+        if (!$content) {
+            Log::error('AI empty content response', $response ?? []);
+            return null;
+        }
         $content = preg_replace('/^```json\s*/i', '', trim($content));
         $content = preg_replace('/```$/', '', trim($content));
-        return json_decode($content, true) ?: null;
+        $decoded = json_decode($content, true);
+        if (!$decoded) {
+            Log::error('AI JSON decode failed', ['raw' => $content]);
+            return null;
+        }
+        return $decoded;
     }
     public function analyzeTextAnswer(string $question, string $answer, int $maxPoints = 5): ?array
     {

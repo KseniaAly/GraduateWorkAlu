@@ -11,40 +11,53 @@ use Illuminate\Support\Facades\Storage;
 class AnalyzeAnswerJob implements ShouldQueue
 {
     use Queueable;
-    public int $tries = 3;
-    public int $backoff = 10;
+//    public int $tries = 3;
+//    public int $backoff = 10;
     public function __construct(
-        public UserAnswer $answer,
+        public int $answerId,
         public string $type,
         public ?string $extension = null,
     ) {}
     public function handle(): void
     {
         $ai = new AIService();
-        $question  = $this->answer->question;
+        $answer = UserAnswer::with('question')->find($this->answerId);
+        if (!$answer) return;
+        $question = $answer->question;
+        if (!$question) {
+            $answer->update([
+                'ai_feedback' => 'Вопрос не найден',
+                'points' => 0
+            ]);
+            return;
+        }
         $maxPoints = $question->points_max ?? 1;
+        $content = $answer->answer ?? '';
         if ($this->type === 'file') {
-            if (!Storage::disk('public')->exists($this->answer->answer)) {
-                $this->answer->update([
+            if (!$content || !Storage::disk('public')->exists($content)){
+                $answer->update([
                     'ai_feedback' => 'Файл не найден.',
-                    'points' => 0,
+                    'points' => 0
                 ]);
                 return;
             }
-            $content = substr(Storage::disk('public')->get($this->answer->answer), 0, 3000);
+            $content = substr(Storage::disk('public')->get($content), 0, 3000);
             $result = $ai->analyzeCode($question->title, $content, $maxPoints);
         } else {
-            $content = $this->answer->answer ?? '';
             $result = $ai->analyzeTextAnswer($question->title, $content, $maxPoints);
         }
-        if ($result) {
-            $this->answer->update([
-                'ai_score' => $result['score'] ?? 0,
-                'ai_feedback' => $result['feedback'] ?? null,
-                'points' => $result['score'] ?? 0,
+        if (!$result){
+            \Illuminate\Support\Facades\Log::error('AI returned null result', [
+                'answer_id' => $answer->id,
+                'type' => $this->type,
+                'content' => $content ?? null
             ]);
-        } else {
-            $this->release(60);
-        }
+            return;
+        };
+        $answer->update([
+            'ai_score' => $result['score'] ?? 0,
+            'ai_feedback' => $result['feedback'] ?? null,
+            'points' => $result['score'] ?? 0,
+        ]);
     }
 }
