@@ -80,19 +80,19 @@
                 <h2>Недавняя активность</h2>
                 <div>
                     @foreach($tests as $test)
-                        <div class="card-active">
-                            <div class="d-flex align-items-center w-100">
-                                <div class="icon"><i class="bi bi-file-earmark-text"></i></div>
-                                <div>
-                                    <div class="title">{{$test->title}}</div>
-                                    <div class="description">{{$test->description}}</div>
+                            <div class="card-active">
+                                <div class="d-flex align-items-center w-100">
+                                    <div class="icon"><i class="bi bi-file-earmark-text"></i></div>
+                                    <div>
+                                        <div class="title">{{$test->title}}</div>
+                                        <div class="description">{{$test->description}}</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="result">92%</div>
+                                    <i class="bi bi-caret-right" style="color: gray"></i>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center">
-                                <div class="result">92%</div>
-                                <i class="bi bi-caret-right" style="color: gray"></i>
-                            </div>
-                        </div>
                     @endforeach
 {{--                    <div class="card-active">--}}
 {{--                        <div class="d-flex align-items-center w-100">--}}

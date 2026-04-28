@@ -76,13 +76,8 @@ class PageController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        $answers = UserAnswer::where('user_id', auth()->id())->orderByDesc('created_at')->pluck('test_id')->toArray();
-        $answers = array_unique($answers);
-        $tests = Test::query();
-        foreach ($answers as $answer) {
-            $tests = $tests->where('id', $answer);
-        }
-        $tests = $tests->get();
+        $answers = UserAnswer::where('user_id', auth()->id())->orderByDesc('created_at')->pluck('test_id')->unique()->values();
+        $tests = Test::whereIn('id', $answers)->get();
         return view('profile', ['user' => $user, 'tests' => $tests]);
     }
 
