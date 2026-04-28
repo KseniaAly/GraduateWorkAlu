@@ -7,6 +7,8 @@ use App\Models\QuestionOption;
 use App\Models\Test;
 use App\Models\UserAnswer;
 use Illuminate\Http\Request;
+use App\Jobs\AnalyzeAnswerJob;
+use App\Services\AIService;
 
 class UserAnswerController extends Controller
 {
@@ -25,15 +27,23 @@ class UserAnswerController extends Controller
     {
         $answers = session()->get('test_answers', []);
         $questionId = $request->question_id;
+
         if ($request->hasFile('file')) {
-            $path = $request->file('file')
-                ->store('test_files', 'public');
-            $answers[$questionId] = $path;
+            $request->validate([
+                'file' => 'mimes:txt,docx|max:10240'
+            ]);
+            $path = $request->file('file')->store('test_files', 'public');
+            $answers[$questionId] = [
+                'type' => 'file',
+                'value' => $path,
+            ];
         } else {
-            $answers[$questionId] = $request->value;
+            $answers[$questionId] = [
+                'type'  => $request->type,
+                'value' => $request->value,
+            ];
         }
         session()->put('test_answers', $answers);
-
         return response()->json(['status' => 'saved']);
     }
 
@@ -44,32 +54,42 @@ class UserAnswerController extends Controller
     {
         $answers = session('test_answers', []);
         UserAnswer::where('user_id', auth()->id())->where('test_id', $test->id)->delete();
-        foreach ($answers as $questionId => $answer) {
-            if (is_array($answer)) {
-                $correctOptions = QuestionOption::where('question_id', $questionId)->where('is_correct', true)->pluck('id')->toArray();
+
+        foreach ($answers as $questionId => $data) {
+            $type = $data['type'] ?? null;
+            $value = $data['value'] ?? null;
+            $question = Question::find($questionId);
+            if ($type === 'radio' || $type === 'checkbox') {
+                if (!is_array($value)) {
+                    $value = [$value];
+                }
+                $correctOptions = QuestionOption::where('question_id', $questionId)->where('is_correct', true)->pluck('id')->map(fn($id) => (string)$id)->toArray();
+                $value = array_map('strval', $value);
                 sort($correctOptions);
-                sort($answer);
-                $is_correct = $correctOptions == $answer ? true : false;
-                $correctCount = count(array_intersect($correctOptions, $answer));
+                sort($value);
+                $is_correct = $correctOptions === $value;
+                $points = count(array_intersect($correctOptions, $value));
                 UserAnswer::create([
                     'user_id' => auth()->id(),
                     'question_id' => $questionId,
                     'test_id' => $test->id,
-                    'answers' => json_encode($answer),
+                    'answers' => json_encode($value),
                     'is_correct' => $is_correct,
-                    'points' => $correctCount,
+                    'points' => $points,
                 ]);
+                continue;
             } else {
-                $correctOption = QuestionOption::where('question_id', $questionId)->where('is_correct', true)->pluck('id')->first();
-                $is_correct = $correctOption == $answer ? true : false;
-                UserAnswer::create([
+                $text = $value;
+                $text = $type === 'file' ? ($this->readFile($value) ?? '') : $value;
+                $userAnswer = UserAnswer::create([
                     'user_id' => auth()->id(),
                     'question_id' => $questionId,
-                    'answer' => $answer,
                     'test_id' => $test->id,
-                    'is_correct' => $is_correct,
-                    'points' => $is_correct ? 1 : 0,
+                    'answer' => $text,
+                    'is_correct' => null,
+                    'points' => 0,
                 ]);
+                AnalyzeAnswerJob::dispatch($userAnswer, $type, $data['extension'] ?? null);
             }
         }
         session()->forget('test_answers');

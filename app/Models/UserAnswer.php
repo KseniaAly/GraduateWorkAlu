@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class UserAnswer extends Model
 {
     protected $fillable = [
-        'question_id', 'user_id', 'test_id', 'answer', 'answers', 'is_correct', 'points'
+        'question_id', 'user_id', 'test_id', 'answer', 'answers', 'is_correct', 'points',
+        'ai_feedback', 'ai_score', 'checked_by_ai'
     ];
     public function test()
     {

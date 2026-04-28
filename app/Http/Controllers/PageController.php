@@ -60,7 +60,7 @@ class PageController extends Controller
         $remainingTime = max(0, (int)$remainingTime);
         if ($remainingTime <= 0) {
             session()->forget('test_answers');
-            session()->forget('test_started_at');
+            session()->forget('test_started_at_'.$test->id);
             return redirect()->route('catalog')->with('error', 'Время теста истекло');
         }
         $test_questions = TestQuestion::query()->where('test_id', $test->id)->orderBy('position')->paginate(2);

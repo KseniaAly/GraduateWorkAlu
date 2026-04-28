@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div class="mine" style="margin-top: 30px; padding: 0">
+    <div class="mine" style="margin-top: 30px; padding: 0; margin-bottom: 20px">
         <div class="d-flex">
             <div style="border-right: 1px solid rgba(47, 50, 188, 0.2); padding: 40px 20px 40px 50px; max-width: 350px">
                 <h3>Вакансии</h3>

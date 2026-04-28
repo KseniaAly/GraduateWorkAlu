@@ -69,7 +69,7 @@
                                     <i class="bi bi-folder2-open"></i>
                                     Выберите файл
                                 </label>
-                                <input type="file" id="file-input" class="file-input-hidden" accept="image/*">
+                                <input type="file" id="file-input" class="file-input-hidden" accept=".txt, .docx, .doc">
                                 <span id="file-name" class="file-name">Файл не выбран</span>
                             </div>
                         @endif

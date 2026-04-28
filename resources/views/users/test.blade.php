@@ -61,11 +61,11 @@
                                     <label class="answer-option">
                                         <input type="checkbox" name="answers[{{$test_question->question_id}}][]"
                                                value="{{$question_option->id}}"
-                                        @if(isset($sessionAnswers[$test_question->question_id])
+                                            @if(isset($sessionAnswers[$test_question->question_id])
                                                 && in_array($question_option->id,
-                                                $sessionAnswers[$test_question->question_id]))
-                                        checked
-                                        @endif>
+                                                (array)($sessionAnswers[$test_question->question_id]['value'] ?? [])))
+                                                checked
+                                            @endif>
                                         <span class="custom-checkbox"></span>
                                             <span class="answer-text">{{$question_option->title}}</span>
                                             @if($question_option->description!=='-')
@@ -81,8 +81,8 @@
                                         <input type="radio" name="answers[{{$test_question->question_id}}]"
                                                value="{{$question_option->id}}"
                                         @if(isset($sessionAnswers[$test_question->question_id])
-                                            && $sessionAnswers[$test_question->question_id] == $question_option->id)
-                                        checked
+                                            && $sessionAnswers[$test_question->question_id]['value'] == $question_option->id)
+                                            checked
                                         @endif>
                                         <span class="custom-checkbox"></span>
                                             <span class="answer-text">{{$question_option->title}}</span>
@@ -95,7 +95,7 @@
                         @elseif($test_question->question->category->id==3)
                             <input type="text" class="form-control-custom" placeholder="Напишите свой ответ"
                                    name="text_answers[{{$test_question->question_id}}]"
-                            value="{{$sessionAnswers[$test_question->question_id] ?? ''}}">
+                                   value="{{$sessionAnswers[$test_question->question_id]['value'] ?? ''}}">
                         @elseif($test_question->question->category->id==4)
                             <div class="custom-file-upload">
                                 <label for="file-input-{{$test_question->question_id}}" class="upload-button">
@@ -103,10 +103,11 @@
                                     Выберите файл
                                 </label>
                                 <input type="file" id="file-input-{{$test_question->question_id}}" class="file-input-hidden"
-                                       name="file_answers[{{$test_question->question_id}}]">
+                                       name="file_answers[{{$test_question->question_id}}]" accept=".txt, .docx">
                                 <span id="file-name-{{$test_question->question_id}}" class="file-name">
-                                    {{isset($sessionAnswers[$test_question->question_id]) ?
-                                basename($sessionAnswers[$test_question->question_id]) : 'Файл не выбран'}}
+                                    {{ isset($sessionAnswers[$test_question->question_id])
+                                        ? basename($sessionAnswers[$test_question->question_id]['value'])
+                                        : 'Файл не выбран' }}
                                 </span>
                             </div>
                         @endif
@@ -201,7 +202,11 @@
             let minutes = Math.floor((timeLeft % 3600) / 60);
             let seconds = timeLeft % 60;
             seconds = seconds<10? '0'+seconds : seconds;
-            timerElement.textContent = hours + ':' + minutes + ':' + seconds;
+            if (hours===0){
+                timerElement.textContent = minutes + ':' + seconds;
+            } else {
+                timerElement.textContent = hours + ':' + minutes + ':' + seconds;
+            }
             timeLeft--;
             if (timeLeft < 0) {
                 clearInterval(countdown);
