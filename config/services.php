@@ -37,7 +37,7 @@ return [
 
     'openrouter' => [
         'key' => env('OPENROUTER_API_KEY'),
-        'model' => env('OPENROUTER_MODEL', 'meta-llama/llama-3.3-70b-instruct'),
+        'model' => env('OPENROUTER_MODEL', 'qwen/qwen3-next-80b-a3b-instruct'),
     ]
 
 ];

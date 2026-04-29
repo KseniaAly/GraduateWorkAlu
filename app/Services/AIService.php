@@ -32,6 +32,9 @@ class AIService{
                 ],
                 'temperature' => 0.1
             ]);
+//            var_dump($response->status());
+//            var_dump($response->body());
+//            exit();
             if ($response->failed()) {
                 Log::error('OpenRouter FAILED', [
                     'status' => $response->status(),
@@ -39,12 +42,16 @@ class AIService{
                 ]);
                 return null;
             }
-            $raw = $response->body();
-            Log::info('OpenRouter RAW RESPONSE', [
-                'raw' => $raw
-            ]);
-            return json_decode($raw, true);
+            $json = $response->json();
+//            var_dump($json);
+//            exit();
+//            Log::info('OpenRouter RAW RESPONSE', [
+//                'raw' => $json
+//            ]);
+            return $json;
         } catch (\Throwable $error){
+//            var_dump($error->getMessage());
+//            exit();
             Log::error('AIService: исключение', ['message' => $error->getMessage()]);
             return null;
         }
@@ -86,6 +93,9 @@ class AIService{
     }
     PROMPT;
         $response = $this->sendRequest($prompt);
+//        var_dump($response);
+//        exit();
+//        return $response;
         return $this->parseContent($response);
     }
     public function analyzeCode(string $task, string $code, int $maxPoints = 10): ?array

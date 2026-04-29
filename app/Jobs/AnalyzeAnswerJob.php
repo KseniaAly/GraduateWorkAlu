@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Storage;
 class AnalyzeAnswerJob implements ShouldQueue
 {
     use Queueable;
-//    public int $tries = 3;
-//    public int $backoff = 10;
     public function __construct(
         public int $answerId,
         public string $type,
@@ -20,6 +18,7 @@ class AnalyzeAnswerJob implements ShouldQueue
     ) {}
     public function handle(): void
     {
+        try {
         $ai = new AIService();
         $answer = UserAnswer::with('question')->find($this->answerId);
         if (!$answer) return;
@@ -45,8 +44,11 @@ class AnalyzeAnswerJob implements ShouldQueue
             $result = $ai->analyzeCode($question->title, $content, $maxPoints);
         } else {
             $result = $ai->analyzeTextAnswer($question->title, $content, $maxPoints);
+//            var_dump($result);
+//            exit();
         }
         if (!$result){
+            var_dump('error');
             \Illuminate\Support\Facades\Log::error('AI returned null result', [
                 'answer_id' => $answer->id,
                 'type' => $this->type,
@@ -54,10 +56,17 @@ class AnalyzeAnswerJob implements ShouldQueue
             ]);
             return;
         };
+        var_dump($result);
+//        exit();
         $answer->update([
             'ai_score' => $result['score'] ?? 0,
             'ai_feedback' => $result['feedback'] ?? null,
             'points' => $result['score'] ?? 0,
+            'is_correct' => $result['correct'] ?? null,
         ]);
+        } catch (\Exception $exception) {
+            var_dump($exception->getMessage());
+            exit();
+        }
     }
 }
