@@ -105,7 +105,8 @@
                                 <input type="file" id="file-input-{{$test_question->question_id}}" class="file-input-hidden"
                                        name="file_answers[{{$test_question->question_id}}]" accept=".txt, .docx">
                                 <span id="file-name-{{$test_question->question_id}}" class="file-name">
-                                    {{ isset($sessionAnswers[$test_question->question_id])
+                                    {{ isset($sessionAnswers[$test_question->question_id]['value'])
+                                        && $sessionAnswers[$test_question->question_id]['value']
                                         ? basename($sessionAnswers[$test_question->question_id]['value'])
                                         : 'Файл не выбран' }}
                                 </span>
@@ -116,7 +117,7 @@
             @endforeach
         </div>
         @if (!$test_questions->hasMorePages())
-            <div style="position: absolute; right: 75px; bottom: -15px">
+            <div style="display: flex; justify-content: right">
                 <button type="submit"
                         class="filter-btn">
                     Завершить тест
@@ -141,10 +142,10 @@
                 }
                 fetch("{{route('test.saveAnswer')}}", {
                     method: "POST",
+                    credentials: 'same-origin',
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRF-TOKEN":
-                            "{{csrf_token()}}"
+                        "X-CSRF-TOKEN": "{{csrf_token()}}"
                     }, body: JSON.stringify({
                         question_id: questionId,
                         value: value,
@@ -161,6 +162,7 @@
                     let questionId = this.name.match(/\d+/)[0];
                     fetch("{{route('test.saveAnswer')}}", {
                         method: "POST",
+                        credentials: 'same-origin',
                         headers: {
                             "Content-Type": "application/json",
                             "X-CSRF-TOKEN": "{{csrf_token()}}"
@@ -189,8 +191,20 @@
                 formData.append('_token', "{{csrf_token()}}");
                 fetch("{{route('test.saveAnswer')}}", {
                     method: "POST",
+                    credentials: 'same-origin',
+                    headers: {
+                        "X-CSRF-TOKEN": "{{csrf_token()}}",
+                        "Accept": "application/json"
+                    },
                     body: formData
-                });
+                })
+                    .then(async response => {
+                        let text = await response.text();
+                        console.log(text);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
             });
         });
     </script>

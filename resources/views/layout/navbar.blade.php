@@ -53,7 +53,7 @@
 {{--                        </li>--}}
                         <li>
                             <a class="dropdown-item" href="{{route('analytics')}}">
-                                <i class="bi bi-pie-chart"></i> Аналитика
+                                <i class="bi bi-pie-chart"></i> Кандидаты
                             </a>
                         </li>
                     </ul>

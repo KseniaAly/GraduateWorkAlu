@@ -12,19 +12,23 @@
                     Завершен
                 </div>
             </div>
-            <h1>Название теста</h1>
+            <h1>{{$test->title}}</h1>
             <div class="d-flex" style="margin-top: 10px">
                 <div class="detail">
                     <i class="bi bi-person"></i>
-                    Кандидат: Иван Иванович
+                    Кандидат: {{auth()->user()->fio}}
                 </div>
                 <div class="detail">
                     <i class="bi bi-calendar-event"></i>
-                    Дата завершения: 24 мая 2024, 14:35
+                    Дата завершения: {{$time->created_at->format('d.m.Y')}}
                 </div>
                 <div class="detail">
                     <i class="bi bi-clock"></i>
-                    Время прохождения: 48 минут
+                    Время прохождения: 0 минут
+                </div>
+                <div class="detail">
+                    <i class="bi bi-award"></i>
+                    Максимальный бал: {{$max_points}}
                 </div>
             </div>
             <div class="content" style="margin-top: 20px">
@@ -37,14 +41,29 @@
                                 <circle class="progress" cx="80" cy="80" r="70" id="progressCircle"/>
                             </svg>
                             <div class="percent" id="percentText">
-                                85%
+                                0%
                             </div>
                         </div>
-                        <h4>Хороший результат</h4>
+                        @if($percent>90 || $percent==90)
+                            <h4>Отличный результат</h4>
+                        @elseif($percent>70 || $percent==70)
+                            <h4>Хороший результат</h4>
+                        @elseif($percent>50 || $percent==50)
+                            <h4>Средний результат</h4>
+                        @else
+                            <h4>Плохой результат</h4>
+                        @endif
+                        <p style="margin-top: 10px">Ваши балы: {{$points}}</p>
                     </div>
                     <div style="margin-left: 50px">
                         <p>Вы продемонстрировали свои профессиональные способноси.
                         Если вы подходите компании, с вами свяжутся в ближайщее время для назначения офлайн собеседования</p>
+                        <a href="" style="margin-top: 10px">Посмотреть правильные ответы</a>
+                        <form action="" method="post">
+                            @csrf
+                            @method('post')
+                            <input hidden="" value="{{$percent}}" name="percent">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -62,7 +81,7 @@
             circle.style.strokeDashoffset = offset;
             text.textContent = percent + "%";
         }
-        setProgress(85);
+        setProgress({{$percent}});
     </script>
 
     <style>
@@ -129,7 +148,7 @@
         }
         .progress {
             fill: none;
-            stroke: #3EC29B;
+            stroke: #2f32bc;
             stroke-width: 10;
             stroke-linecap: round;
             transition: stroke-dashoffset 0.6s ease;

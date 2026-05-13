@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Question;
 use App\Models\QuestionOption;
+use App\Models\Result;
 use App\Models\Test;
+use App\Models\TestQuestion;
 use App\Models\UserAnswer;
 use Illuminate\Http\Request;
 use App\Jobs\AnalyzeAnswerJob;
 use App\Services\AIService;
+use Illuminate\Support\Facades\DB;
 
 class UserAnswerController extends Controller
 {
@@ -30,7 +33,7 @@ class UserAnswerController extends Controller
 
         if ($request->hasFile('file')) {
             $request->validate([
-                'file' => 'mimes:txt,docx|max:10240'
+                'file' => 'file|max:2048'
             ]);
             $path = $request->file('file')->store('test_files', 'public');
             $answers[$questionId] = [
@@ -80,7 +83,7 @@ class UserAnswerController extends Controller
                 continue;
             } else {
                 $text = $value;
-                $text = $type === 'file' ? ($this->readFile($value) ?? '') : $value;
+//                $text = $type === 'file' ? ($this->readFile($value) ?? '') : $value;
                 $userAnswer = UserAnswer::create([
                     'user_id' => auth()->id(),
                     'question_id' => $questionId,
@@ -92,10 +95,22 @@ class UserAnswerController extends Controller
                 AnalyzeAnswerJob::dispatch($userAnswer->id, $type, $data['extension'] ?? null);
             }
         }
+        $points = DB::table('user_answers')
+            ->where('user_id', auth()->id())
+            ->where('test_id', $test->id)
+            ->sum('user_answers.points');
+        $time = UserAnswer::where('test_id', $test->id)->where('user_id', auth()->id())->latest()->first();
+        $max_points = DB::table('test_questions')
+            ->join('questions', 'test_questions.question_id', '=', 'questions.id')
+            ->where('test_questions.test_id', $test->id)
+            ->sum('questions.points_max');
+        $percent = round($points/$max_points*100);
         session()->forget('test_answers');
         session()->forget('test_started_at_'.$test->id);
         session()->forget('test_time_limit_'.$test->id);
-        return redirect()->route('profile');
+        return view('users.result', ['test' => $test,
+            'max_points' => $max_points, 'percent' => $percent, 'points' => $points,
+            'time' => $time]);
     }
 
     /**

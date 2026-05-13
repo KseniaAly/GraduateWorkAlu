@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Result;
+use App\Models\Test;
 use Illuminate\Http\Request;
 
 class ResultController extends Controller
@@ -10,9 +11,9 @@ class ResultController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Test $test)
     {
-        return view('users.result');
+        return view('users.result', ['test' => $test]);
     }
 
     /**

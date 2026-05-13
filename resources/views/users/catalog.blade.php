@@ -60,11 +60,11 @@
             </div>
             <div style="padding: 40px 50px 40px 20px; width: auto">
                 <div class="d-flex align-items-center justify-between">
-                    <p class="p" style="font-size: 14px">Надено {{count($tests)}} теста</p>
+                    <p class="p" style="font-size: 14px">Найдено {{count($tests)}} тестов</p>
                 </div>
                 <div class="d-flex flex-wrap" style="margin-top: 20px">
                     @foreach($tests as $test)
-                        <div class="test-card">
+                        <div class="test-card" style="margin-bottom: 10px">
                             <div class="card-top">
                                 <div class="icon-box">
                                     <i class="bi bi-card-checklist"></i>

@@ -63,6 +63,7 @@ class AnalyzeAnswerJob implements ShouldQueue
             'ai_feedback' => $result['feedback'] ?? null,
             'points' => $result['score'] ?? 0,
             'is_correct' => $result['correct'] ?? null,
+            'checked_by_ai' => true
         ]);
         } catch (\Exception $exception) {
             var_dump($exception->getMessage());
