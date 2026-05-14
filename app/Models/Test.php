@@ -33,4 +33,9 @@ class Test extends Model
     {
         return $this->hasMany(UserAnswer::class , 'test_id');
     }
+
+    public function results()
+    {
+        return $this->hasMany(Result::class);
+    }
 }

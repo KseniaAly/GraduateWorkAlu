@@ -24,7 +24,7 @@
             @if(\Illuminate\Support\Facades\Auth::user()->role=='admin')
                 <a class="btn btn-mine" href="{{route('tests')}}">создать тест</a>
             @else
-                <a class="btn btn-mine" href="">посмотреть тесты</a>
+                <a class="btn btn-mine" href="{{route('catalog')}}">посмотреть тесты</a>
             @endif
         @endauth
     </div>

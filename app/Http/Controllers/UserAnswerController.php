@@ -83,7 +83,6 @@ class UserAnswerController extends Controller
                 continue;
             } else {
                 $text = $value;
-//                $text = $type === 'file' ? ($this->readFile($value) ?? '') : $value;
                 $userAnswer = UserAnswer::create([
                     'user_id' => auth()->id(),
                     'question_id' => $questionId,
@@ -105,12 +104,19 @@ class UserAnswerController extends Controller
             ->where('test_questions.test_id', $test->id)
             ->sum('questions.points_max');
         $percent = round($points/$max_points*100);
+        $started = session('test_started_at_'.$test->id);
+        if ($started){
+            $seconds = now()->timestamp - $started;
+            $minutes = floor($seconds / 60);
+            $remainingSeconds = $seconds % 60;
+            $total_time = sprintf('%d мин %d сек', $minutes, $remainingSeconds);
+        }
         session()->forget('test_answers');
         session()->forget('test_started_at_'.$test->id);
         session()->forget('test_time_limit_'.$test->id);
         return view('users.result', ['test' => $test,
             'max_points' => $max_points, 'percent' => $percent, 'points' => $points,
-            'time' => $time]);
+            'time' => $time, 'total_time' => $total_time]);
     }
 
     /**

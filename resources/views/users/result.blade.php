@@ -24,7 +24,7 @@
                 </div>
                 <div class="detail">
                     <i class="bi bi-clock"></i>
-                    Время прохождения: 0 минут
+                    Время прохождения: {{$total_time}}
                 </div>
                 <div class="detail">
                     <i class="bi bi-award"></i>
@@ -55,15 +55,19 @@
                         @endif
                         <p style="margin-top: 10px">Ваши балы: {{$points}}</p>
                     </div>
-                    <div style="margin-left: 50px">
+                    <div style="margin-left: 50px; position: relative">
                         <p>Вы продемонстрировали свои профессиональные способноси.
                         Если вы подходите компании, с вами свяжутся в ближайщее время для назначения офлайн собеседования</p>
-                        <a href="" style="margin-top: 10px">Посмотреть правильные ответы</a>
-                        <form action="" method="post">
+                        <a href="" style="margin-top: 10px; font-size: 12px">Посмотреть правильные ответы</a>
+                        <form action="{{route('test.result', ['test'=>$test])}}" method="post" id="result">
                             @csrf
                             @method('post')
-                            <input hidden="" value="{{$percent}}" name="percent">
+                            <input type="hidden" value="{{$percent}}" name="percent">
+                            <input type="hidden" value="{{$points}}" name="total_points">
+                            <input type="hidden" value="{{$total_time}}" name="completed_time">
                         </form>
+                        <button type="submit" form="result" class="btn-custom btn-primary-custom"
+                        style="position: absolute; right: 20px">Закрыть</button>
                     </div>
                 </div>
             </div>
