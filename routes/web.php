@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/catalog/test/{test}/save', [\App\Http\Controllers\UserAnswerController::class, 'store'])->name('test.save');
 
     Route::post('/catalog/test/{test}/result', [ResultController::class, 'store'])->name('test.result');
+    Route::get('/user/test/{test}/results/view', [ResultController::class, 'index'])->name('test.resultView');
 
     Route::get('/profile', [\App\Http\Controllers\PageController::class, 'profile'])->name('profile');
     Route::put('/profile/redact/{user}', [UserController::class, 'edit'])->name('profileRedact');

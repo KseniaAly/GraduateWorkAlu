@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\QuestionOption;
 use App\Models\Result;
 use App\Models\Test;
+use App\Models\TestQuestion;
+use App\Models\UserAnswer;
 use Illuminate\Http\Request;
 
 class ResultController extends Controller
@@ -13,7 +16,16 @@ class ResultController extends Controller
      */
     public function index(Test $test)
     {
-        return view('users.result', ['test' => $test]);
+        $test_questions = TestQuestion::query()->where('test_id', $test->id)->orderBy('position')->paginate(2);
+        $questions_count = TestQuestion::query()->where('test_id', $test->id)->count();
+        $question_options = QuestionOption::all();
+        $user_answers = UserAnswer::query()->where('user_answers.test_id', $test->id)
+            ->where('user_answers.user_id', auth()->id())->get();
+        $correct_count = $user_answers->where('is_correct', true)->count();
+        $percentage = $questions_count > 0 ? round(($correct_count / $questions_count) * 100) : 0;
+        return view('users.view_test', ['test' => $test],
+        ['question_options' => $question_options, 'test_questions' => $test_questions, 'questions_count' => $questions_count,
+            'user_answers' => $user_answers, 'correct_count' => $correct_count, 'percentage' => $percentage]);
     }
 
     /**

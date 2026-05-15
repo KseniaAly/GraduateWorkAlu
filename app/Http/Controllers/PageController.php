@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\QuestionOption;
+use App\Models\Result;
 use App\Models\Test;
 use App\Models\TestQuestion;
 use App\Models\User;
@@ -10,6 +11,7 @@ use App\Models\UserAnswer;
 use App\Models\Vacancy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
@@ -78,7 +80,16 @@ class PageController extends Controller
         $user = Auth::user();
         $answers = UserAnswer::where('user_id', auth()->id())->orderByDesc('created_at')->pluck('test_id')->unique()->values();
         $tests = Test::whereIn('id', $answers)->get();
-        return view('profile', ['user' => $user, 'tests' => $tests]);
+        $results = [];
+        foreach ($tests as $test) {
+            $max_points = DB::table('test_questions')
+                ->join('questions', 'test_questions.question_id', '=', 'questions.id')
+                ->where('test_questions.test_id', $test->id)
+                ->sum('questions.points_max');
+            $points = Result::query()->where('test_id', $test->id)->where('results.user_id', \auth()->id())->first()->total_points;
+            $results[$test->id] = round($points/$max_points * 100);
+        }
+        return view('profile', ['user' => $user, 'tests' => $tests, 'results' => $results]);
     }
 
     public function verify($email)
