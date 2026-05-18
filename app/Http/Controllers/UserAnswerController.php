@@ -94,16 +94,11 @@ class UserAnswerController extends Controller
                 AnalyzeAnswerJob::dispatch($userAnswer->id, $type, $data['extension'] ?? null);
             }
         }
-        $points = DB::table('user_answers')
-            ->where('user_id', auth()->id())
-            ->where('test_id', $test->id)
-            ->sum('user_answers.points');
         $time = UserAnswer::where('test_id', $test->id)->where('user_id', auth()->id())->latest()->first();
         $max_points = DB::table('test_questions')
             ->join('questions', 'test_questions.question_id', '=', 'questions.id')
             ->where('test_questions.test_id', $test->id)
             ->sum('questions.points_max');
-        $percent = round($points/$max_points*100);
         $started = session('test_started_at_'.$test->id);
         if ($started){
             $seconds = now()->timestamp - $started;
@@ -114,6 +109,11 @@ class UserAnswerController extends Controller
         session()->forget('test_answers');
         session()->forget('test_started_at_'.$test->id);
         session()->forget('test_time_limit_'.$test->id);
+        $points = DB::table('user_answers')
+            ->where('user_id', auth()->id())
+            ->where('test_id', $test->id)
+            ->sum('user_answers.points');
+        $percent = round($points/$max_points*100);
         return view('users.result', ['test' => $test,
             'max_points' => $max_points, 'percent' => $percent, 'points' => $points,
             'time' => $time, 'total_time' => $total_time]);

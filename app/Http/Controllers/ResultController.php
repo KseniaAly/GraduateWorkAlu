@@ -8,6 +8,7 @@ use App\Models\Test;
 use App\Models\TestQuestion;
 use App\Models\UserAnswer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ResultController extends Controller
 {
@@ -45,7 +46,11 @@ class ResultController extends Controller
         $result = new Result();
         $result->user_id = auth()->id();
         $result->test_id = $test->id;
-        $result->total_points = $request->total_points;
+        $points = DB::table('user_answers')
+            ->where('user_id', auth()->id())
+            ->where('test_id', $test->id)
+            ->sum('user_answers.points');
+        $result->total_points = $points;
         if ((int)$request->percent >= $test->passing_score){
             $result->passed = true;
         } else {

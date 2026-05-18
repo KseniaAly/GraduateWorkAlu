@@ -80,16 +80,46 @@ class PageController extends Controller
         $user = Auth::user();
         $answers = UserAnswer::where('user_id', auth()->id())->orderByDesc('created_at')->pluck('test_id')->unique()->values();
         $tests = Test::whereIn('id', $answers)->get();
+        $count = count($tests);
         $results = [];
+        $total_percentage = 0;
+        $tests_count = 0;
+        $total_time_seconds = 0;
         foreach ($tests as $test) {
             $max_points = DB::table('test_questions')
                 ->join('questions', 'test_questions.question_id', '=', 'questions.id')
                 ->where('test_questions.test_id', $test->id)
                 ->sum('questions.points_max');
-            $points = Result::query()->where('test_id', $test->id)->where('results.user_id', \auth()->id())->first()->total_points;
-            $results[$test->id] = round($points/$max_points * 100);
+            $result = Result::query()
+                ->where('test_id', $test->id)
+                ->where('results.user_id', auth()->id())
+                ->first();
+            if ($result && $max_points > 0) {
+                $percentage = round($result->total_points / $max_points * 100);
+                $results[$test->id] = $percentage;
+                $total_percentage += $percentage;
+                $tests_count++;
+                if ($result->completed_time) {
+                    $time_seconds = 0;
+                    if (preg_match('/(\d+)\s*мин/', $result->completed_time, $matches)) {
+                        $time_seconds += $matches[1] * 60;
+                    }
+                    if (preg_match('/(\d+)\s*сек/', $result->completed_time, $matches)) {
+                        $time_seconds += $matches[1];
+                    }
+                    $total_time_seconds += $time_seconds;
+                }
+            }
         }
-        return view('profile', ['user' => $user, 'tests' => $tests, 'results' => $results]);
+
+        $hours = floor($total_time_seconds / 3600);
+        $minutes = floor(($total_time_seconds % 3600) / 60);
+        $seconds = $total_time_seconds % 60;
+        $total_time_formatted = sprintf('%d ч %d мин %d сек', $hours, $minutes, $seconds);
+
+        $average_result = $tests_count > 0 ? round($total_percentage / $tests_count) : 0;
+        return view('profile', ['user' => $user, 'tests' => $tests, 'results' => $results, 'count' => $count,
+            'average_result' => $average_result, 'total_time_formatted' => $total_time_formatted]);
     }
 
     public function verify($email)

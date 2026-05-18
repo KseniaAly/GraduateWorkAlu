@@ -54,21 +54,21 @@
                     <div class="card-static">
                         <div class="icon"><i class="bi bi-activity"></i></div>
                         <div>
-                            <p>5</p>
+                            <p>{{$count}}</p>
                             <p class="title">Пройдено тестов</p>
                         </div>
                     </div>
                     <div class="card-static" style="margin-left: 20px">
                         <div class="icon" style="background: #FEE9EA; color: #F42836"><i class="bi bi-graph-up"></i></div>
                         <div>
-                            <p>90%</p>
+                            <p>{{$average_result}}%</p>
                             <p class="title">Средний результат</p>
                         </div>
                     </div>
                     <div class="card-static" style="margin-left: 20px">
                         <div class="icon"><i class="bi bi-clock"></i></div>
                         <div>
-                            <p>3ч</p>
+                            <p>{{$total_time_formatted}}</p>
                             <p class="title">Общее время</p>
                         </div>
                     </div>

@@ -58,7 +58,7 @@
                     <div style="margin-left: 50px; position: relative">
                         <p>Вы продемонстрировали свои профессиональные способноси.
                         Если вы подходите компании, с вами свяжутся в ближайщее время для назначения офлайн собеседования</p>
-                        <a href="" style="margin-top: 10px; font-size: 12px">Посмотреть правильные ответы</a>
+                        <a href="{{route('test.resultView', ['test'=>$test])}}" style="margin-top: 10px; font-size: 12px">Посмотреть правильные ответы</a>
                         <form action="{{route('test.result', ['test'=>$test])}}" method="post" id="result">
                             @csrf
                             @method('post')
