@@ -51,7 +51,12 @@ class ResultController extends Controller
             ->where('test_id', $test->id)
             ->sum('user_answers.points');
         $result->total_points = $points;
-        if ((int)$request->percent >= $test->passing_score){
+        $max_points = DB::table('test_questions')
+            ->join('questions', 'test_questions.question_id', '=', 'questions.id')
+            ->where('test_questions.test_id', $test->id)
+            ->sum('questions.points_max');
+        $percent = round($points/$max_points*100);
+        if ((int)$percent >= $test->passing_score){
             $result->passed = true;
         } else {
             $result->passed = false;

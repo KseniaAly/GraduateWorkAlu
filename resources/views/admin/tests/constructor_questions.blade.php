@@ -8,9 +8,7 @@
         @method('put')
 <div class="d-flex justify-content-between align-items-center" style="margin-top: 100px">
     <div class="mine" style="padding-top: 30px; padding-bottom: 30px">
-        <h1>
-            Редактирование теста
-        </h1>
+        <h1>Редактирование теста</h1>
         <p>Создайте тест для оценки кандидатов</p>
     </div>
     <div>

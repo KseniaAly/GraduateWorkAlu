@@ -73,7 +73,8 @@ class PageController extends Controller
     }
     public function analytics()
     {
-        return view('admin.analytics');
+        $results = Result::query()->where('results.passed', true)->get();
+        return view('admin.analytics', ['results' => $results]);
     }
     public function profile()
     {
